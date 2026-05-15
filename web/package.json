@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node dist/server.js",
-		"dev:server": "tsx watch server.ts",
+		"dev:server": "tsx watch --exclude './node_modules/.vite-temp/**' --exclude '../app/node_modules/.vite-temp/**' server.ts",
 		"build": "npm run typecheck:client && npm run build:client && npm run build:server",
 		"build:client": "vite build",
 		"build:server": "tsc -p tsconfig.server.json",
