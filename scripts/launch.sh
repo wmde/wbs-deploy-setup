@@ -32,8 +32,65 @@ wait_for_launch_signal() {
   status "Configuration saved." "config_saved"
 }
 
+is_arm64() {
+  local arch
+  arch="$(uname -m)"
+  [[ "$arch" == "arm64" || "$arch" == "aarch64" ]]
+}
+
+write_local_compose_override() {
+  cat > docker-compose.local.yml <<'EOF'
+services:
+  wikibase:
+    image: wikibase/wikibase:latest
+    pull_policy: never
+  wikibase-jobrunner:
+    image: wikibase/wikibase:latest
+    pull_policy: never
+  elasticsearch:
+    image: wikibase/elasticsearch:latest
+    pull_policy: never
+  wdqs:
+    image: wikibase/wdqs:latest
+    pull_policy: never
+  wdqs-updater:
+    image: wikibase/wdqs:latest
+    pull_policy: never
+  wdqs-frontend:
+    image: wikibase/wdqs-frontend:latest
+    pull_policy: never
+  quickstatements:
+    image: wikibase/quickstatements:latest
+    pull_policy: never
+EOF
+}
+
+prepare_arm64_local_images() {
+  if ! is_arm64; then
+    return 0
+  fi
+
+  local pipeline_dir
+  local pipeline_dir_quoted
+  pipeline_dir="$(cd .. && pwd)"
+  printf -v pipeline_dir_quoted '%q' "$pipeline_dir"
+
+  if [ ! -x "$pipeline_dir/nx" ]; then
+    status "ARM64 detected, but $pipeline_dir/nx is not executable; cannot build local images." "arm64_local_build_unavailable"
+    return 1
+  fi
+
+  status "ARM64 detected; building local Wikibase Suite images..." "arm64_local_build_started"
+  run "cd $pipeline_dir_quoted && ./nx build"
+
+  status "Using local Wikibase Suite images from docker-compose.local.yml." "arm64_local_override_written"
+  write_local_compose_override
+}
+
 launch_deploy() {
   pushd "$DEPLOY_DIR" >/dev/null || return 1
+
+  prepare_arm64_local_images
 
   local compose_opts=()
   local compose_up_opts=(-d)

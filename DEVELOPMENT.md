@@ -47,6 +47,7 @@ To use these special localhost-only domains, you’ll need to add entries to you
 - The setup web server runs on port 8888 (HTTPS) when `--web` is used.
 - For non-localhost web installs, setup will try to obtain a Let’s Encrypt cert on port 80. If that fails, it falls back to a self-signed cert (browser warning).
 - If `docker-compose.local.yml` exists in `deploy/`, it will be merged automatically.  
+- On ARM64 hosts, launch builds the Wikibase Suite images locally with `./nx build` from `wikibase-release-pipeline` and writes `deploy/docker-compose.local.yml` so Docker Compose uses the local `wikibase/*:latest` images.
 - Default `wikibase-release-pipeline` deploy ref is `deploy@7.0.0`.
 - Use `--deploy-ref REF` to checkout a specific `wikibase-release-pipeline` branch or tag.
 - After launch, your saved `.env` config is displayed—be sure to store credentials securely.
