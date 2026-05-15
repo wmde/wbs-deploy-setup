@@ -79,6 +79,7 @@ fi
 # --- Setup variables (including defaults) ---
 
 SETUP_REPO_URL="${SETUP_REPO_URL:-https://github.com/wmde/wbs-deploy-setup.git}"
+SETUP_REF="${SETUP_REF:-explore/arm64-local-builds}"
 REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
 DEPLOY_REF="${DEPLOY_REF:-"deploy@7.0.0"}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
@@ -129,7 +130,7 @@ clone_repo() {
   mkdir -p "$WBS_DIR"
   pushd "$WBS_DIR" >/dev/null || return 1
 
-  git clone --branch main --single-branch "$SETUP_REPO_URL" --depth 1 >/dev/null 2>&1
+  git clone --branch "$SETUP_REF" --single-branch "$SETUP_REPO_URL" --depth 1 >/dev/null 2>&1
 
   if [ ! -d wikibase-release-pipeline/.git ]; then
     echo "Checking out wikibase-release-pipeline at $DEPLOY_REF..."

@@ -31,6 +31,8 @@ This document covers local testing, CLI options, and other details useful for de
 | `--debug`        | Enable verbose logging; disables quiet pulls during Docker builds. |
 | `--local`        | Configure for localhost: defaults hosts to `wikibase.test` and `query.wikibase.test`, avoids Let’s Encrypt. |
 
+You can also set `SETUP_REF` to control which `wbs-deploy-setup` branch or tag the bootstrap script clones.
+
 ### Localhost defaults
 
 When using `--local` (or `--dev`), setup defaults to:
